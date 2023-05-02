@@ -34,7 +34,7 @@ void Denoiser::Reprojection(const FrameInfo &frameInfo) {
                     int pre_id = m_preFrameInfo.m_id(pre_position_screen.x, pre_position_screen.y);
                     if (pre_id == id) {
                         m_valid(x, y) = true;
-                        m_misc(x, y) =m_accColor(pre_position_screen.x, pre_position_screen.y);
+                        m_misc(x, y) = m_accColor(pre_position_screen.x, pre_position_screen.y);
                     }
                 }
             }
@@ -54,6 +54,27 @@ void Denoiser::TemporalAccumulation(const Buffer2D<Float3> &curFilteredColor) {
             Float3 color = m_accColor(x, y);
             // TODO: Exponential moving average
             float alpha = 1.0f;
+
+            if (m_valid(x, y)) {
+                alpha = m_alpha;
+                int x_min = std::max(0, x - kernelRadius);
+                int x_max = std::min(width - 1, x + kernelRadius);
+                int y_min = std::max(0, y - kernelRadius);
+                int y_max = std::min(height - 1, y + kernelRadius);
+
+                Float3 mu(0);
+                Float3 sigma(0);
+                for (int x_j = x_min; x_j <= x_max; x_j++) {
+                    for (int y_j = y_min; y_j <= y_max; y_j++) {
+                        mu += curFilteredColor(x_j, y_j);
+                        sigma += Sqr(curFilteredColor(x_j, y_j) - curFilteredColor(x, y));
+                    }
+                }
+                mu /= 49.0f;
+                sigma = SafeSqrt(sigma / 49.0f);
+                color = Clamp(color, mu - sigma * m_colorBoxK, mu + sigma * m_colorBoxK);
+            }
+            
             m_misc(x, y) = Lerp(color, curFilteredColor(x, y), alpha);
         }
     }
