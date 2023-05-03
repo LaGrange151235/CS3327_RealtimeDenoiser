@@ -16,6 +16,20 @@ This repository is for the course project of CS3327. The main tasks are:
     $\overline{C}_i\leftarrow\alpha\overline{C}_i+(1-\alpha)Clamp(\overline{C}_{i-1})$
         - $\overline{C}_i$: Current frame
         - $\overline{C}_{i-1}$: Previous frame which has already denoised
+
+## Environment
+- Ubuntu22.04.1 LTS @ WSL2
+- gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0
+- cmake version 3.22.1
+- ffmpeg version 4.4.2-0ubuntu0.22.04.1
+
+## Install
+```bash
+sudo apt install gcc
+sudo apt install cmake
+sudo apt install ffmpeg
+bash build.sh
+```
 ---
 此仓库为CS3327的大作业，主要任务有:
 1. 实现`src/denoiser.cpp`中的`Filter`函数，完成单帧降噪。
@@ -34,3 +48,17 @@ This repository is for the course project of CS3327. The main tasks are:
     $\overline{C}_i\leftarrow\alpha\overline{C}_i+(1-\alpha)Clamp(\overline{C}_{i-1})$
         - $\overline{C}_i$：当前帧
         - $\overline{C}_{i-1}$：已经降噪的前一帧
+
+## 环境
+- Ubuntu22.04.1 LTS @ WSL2
+- gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0
+- cmake version 3.22.1
+- ffmpeg version 4.4.2-0ubuntu0.22.04.1
+
+## 安装
+```bash
+sudo apt install gcc
+sudo apt install cmake
+sudo apt install ffmpeg
+bash build.sh
+```
