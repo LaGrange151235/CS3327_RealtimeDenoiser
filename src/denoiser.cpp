@@ -81,11 +81,12 @@ void Denoiser::TemporalAccumulation(const Buffer2D<Float3> &curFilteredColor) {
     std::swap(m_misc, m_accColor);
 }
 
-Buffer2D<Float3> Denoiser::Filter(const FrameInfo &frameInfo) {
+Buffer2D<Float3> Denoiser::Filter(const FrameInfo &frameInfo) { // This Filter function has implemented À-Trous Wavelet filtering method.
     int height = frameInfo.m_beauty.m_height;
     int width = frameInfo.m_beauty.m_width;
     Buffer2D<Float3> filteredImage = CreateBuffer2D<Float3>(width, height);
     int kernelRadius = 16;
+    int steps = 4;
 #pragma omp parallel for
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
@@ -104,35 +105,69 @@ Buffer2D<Float3> Denoiser::Filter(const FrameInfo &frameInfo) {
             Float3 filtered_color;
             float weights = .0f;
 
-            for (int x_j = x_min; x_j <= x_max; x_j++) {
-                for (int y_j = y_min; y_j <= y_max; y_j++) {
-                    if (x_j == x && y_j == y) {
+            for (int i = 0; i < steps; i++) {
+                for (int j = -2; j <= 2; j++) {
+                    for (int k = -2; k <= 2; k++) { // Filter core is always 5x5
+                        int x_j = x+pow(2, i)*j;
+                        int y_j = y+pow(2, i)*k;
+                        if (x_j == x && y_j == y) {
                         weights += 1.0;
                         filteredImage(x, y) += color_i;
-                    }
-                    else {
-                        auto postion_j = frameInfo.m_position(x_j, y_j);
-                        auto normal_j = frameInfo.m_normal(x_j, y_j);
-                        auto color_j = frameInfo.m_beauty(x_j, y_j);
-
-                        float D_Coord = SqrDistance(postion_i, postion_j) / (2.0f * Sqr(m_sigmaCoord));
-                    
-                        float D_Color = SqrDistance(color_i, color_j) / (2.0f * Sqr(m_sigmaColor));
-                    
-                        float D_Normal = Sqr(SafeAcos(Dot(normal_i, normal_j))) / (2.0f * Sqr(m_sigmaNormal));
-                    
-                        float D_Plane = 0.0f;
-                        if (D_Coord > 0.0f) {
-                            D_Plane = Sqr(Dot(normal_i, Normalize(postion_j - postion_i)));
                         }
-                        D_Plane /= (2.0f * Sqr(m_sigmaPlane));
+                        else {
+                            auto postion_j = frameInfo.m_position(x_j, y_j);
+                            auto normal_j = frameInfo.m_normal(x_j, y_j);
+                            auto color_j = frameInfo.m_beauty(x_j, y_j);
 
-                        float weight = std::exp(-D_Coord - D_Color - D_Normal - D_Plane);
-                        weights += weight;
-                        filtered_color += color_j * weight;
+                            float D_Coord = SqrDistance(postion_i, postion_j) / (2.0f * Sqr(m_sigmaCoord));
+                    
+                            float D_Color = SqrDistance(color_i, color_j) / (2.0f * Sqr(m_sigmaColor));
+                    
+                            float D_Normal = Sqr(SafeAcos(Dot(normal_i, normal_j))) / (2.0f * Sqr(m_sigmaNormal));
+                    
+                            float D_Plane = 0.0f;
+                            if (D_Coord > 0.0f) {
+                                D_Plane = Sqr(Dot(normal_i, Normalize(postion_j - postion_i)));
+                            }
+                            D_Plane /= (2.0f * Sqr(m_sigmaPlane));
+
+                            float weight = std::exp(-D_Coord - D_Color - D_Normal - D_Plane);
+                            weights += weight;
+                            filtered_color += color_j * weight;
+                        }
                     }
                 }
             }
+
+            //for (int x_j = x_min; x_j <= x_max; x_j++) {
+            //    for (int y_j = y_min; y_j <= y_max; y_j++) {
+            //        if (x_j == x && y_j == y) {
+            //            weights += 1.0;
+            //            filteredImage(x, y) += color_i;
+            //        }
+            //        else {
+            //            auto postion_j = frameInfo.m_position(x_j, y_j);
+            //            auto normal_j = frameInfo.m_normal(x_j, y_j);
+            //            auto color_j = frameInfo.m_beauty(x_j, y_j);
+//
+            //            float D_Coord = SqrDistance(postion_i, postion_j) / (2.0f * Sqr(m_sigmaCoord));
+            //        
+            //            float D_Color = SqrDistance(color_i, color_j) / (2.0f * Sqr(m_sigmaColor));
+            //        
+            //            float D_Normal = Sqr(SafeAcos(Dot(normal_i, normal_j))) / (2.0f * Sqr(m_sigmaNormal));
+            //        
+            //            float D_Plane = 0.0f;
+            //            if (D_Coord > 0.0f) {
+            //                D_Plane = Sqr(Dot(normal_i, Normalize(postion_j - postion_i)));
+            //            }
+            //            D_Plane /= (2.0f * Sqr(m_sigmaPlane));
+//
+            //            float weight = std::exp(-D_Coord - D_Color - D_Normal - D_Plane);
+            //            weights += weight;
+            //            filtered_color += color_j * weight;
+            //        }
+            //    }
+            //}
             filteredImage(x, y) = filtered_color / weights;
         }
     }
