@@ -13,7 +13,7 @@ This repository is for the course project of CS3327. The main tasks are:
         - $M$: Matrix from object to world at current frame
 3. Implement a `TemporalAccumulation` function at `src/denoiser.cpp` to utilize information from `Reprojection` denoise the current frame by combining current frame with valid previous frame incrementally.
     - The equation of combination is: 
-    $\overline{C}_i \leftarrow \alpha \overline{C}_i+(1-\alpha)Clamp(\overline{C}_{i-1})$
+    $\overline{C}_i\leftarrow\alpha\overline{C}_i+(1-\alpha)Clamp(\overline{C}_{i-1})$
         - $\overline{C}_i$: Current frame
         - $\overline{C}_{i-1}$: Previous frame which has already denoised
 ---
@@ -31,6 +31,6 @@ This repository is for the course project of CS3327. The main tasks are:
         - $M$: 当前帧示物体坐标系到世界坐标系的矩阵
 3. 实现`src/denoiser.cpp`中的`TemporalAccumulation`函数，利用`Reprojection`得到的信息通过增量式的将当前帧和已经降噪的前一帧结合进行降噪。
     - 两帧结合的公式是：
-    $\overline{C}_i  \alpha \overline{C}_i+(1-\alpha)Clamp(\overline{C}_{i-1})$
+    $\overline{C}_i\leftarrow\alpha\overline{C}_i+(1-\alpha)Clamp(\overline{C}_{i-1})$
         - $\overline{C}_i$：当前帧
         - $\overline{C}_{i-1}$：已经降噪的前一帧
