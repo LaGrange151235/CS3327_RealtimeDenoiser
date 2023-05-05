@@ -40,7 +40,8 @@ class Denoiser {
 
     float m_alpha = 0.2f;
     float m_sigmaPlane = 0.1f;
-    float m_sigmaColor = 0.6f;
+    //float m_sigmaColor = 0.6f;
+    float m_sigmaColor = 10.0f; // For Pink-room a larger m_sigmaColor gives out better result
     float m_sigmaNormal = 0.1f;
     float m_sigmaCoord = 32.0f;
     float m_colorBoxK = 1.0f;
