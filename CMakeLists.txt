@@ -1,4 +1,8 @@
 cmake_minimum_required (VERSION 3.2)
+IF(WIN32)
+    set (CMAKE_C_COMPILER   "gcc.exe")
+    set (CMAKE_CXX_COMPILER "g++.exe")
+ENDIF()
 project (Denoise)
 
 set (CMAKE_CXX_STANDARD 17)
