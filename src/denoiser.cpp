@@ -1,5 +1,6 @@
 #include "denoiser.h"
 #include "util/mathutil.h"
+#include <time.h>
 
 Denoiser::Denoiser() : m_useTemportal(false) {}
 
@@ -111,8 +112,8 @@ Buffer2D<Float3> Denoiser::Filter(const FrameInfo &frameInfo) { // This Filter f
                         int x_j = x+pow(2, i)*j;
                         int y_j = y+pow(2, i)*k;
                         if (x_j == x && y_j == y) {
-                        weights += 1.0;
-                        filteredImage(x, y) += color_i;
+                            weights += 1.0;
+                            filteredImage(x, y) += color_i;
                         }
                         else {
                             auto postion_j = frameInfo.m_position(x_j, y_j);
@@ -157,7 +158,11 @@ void Denoiser::Maintain(const FrameInfo &frameInfo) { m_preFrameInfo = frameInfo
 Buffer2D<Float3> Denoiser::ProcessFrame(const FrameInfo &frameInfo) {
     // Filter current frame
     Buffer2D<Float3> filteredColor;
+    clock_t start = clock();
     filteredColor = Filter(frameInfo);
+    clock_t end = clock();
+    double interval = double(end-start)/CLOCKS_PER_SEC;
+    printf("%lf\n", interval);
 
     // Reproject previous frame color to current
     if (m_useTemportal) {
