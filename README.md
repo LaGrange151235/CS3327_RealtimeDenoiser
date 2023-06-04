@@ -25,8 +25,8 @@ This repository is for the course project of CS3327. The main tasks are:
 - ffmpeg version 4.4.2-0ubuntu0.22.04.1
 ### Windows
 - Windows 10 x86_64
-- gcc version 12.2.0 (x86_64-posix-seh-rev2, Built by MinGW-W64 project)
-- cmake version 3.26.1
+- gcc version 13.1.0 (x86_64-posix-seh-rev1, Built by MinGW-Builds project)
+- cmake version 3.26.4
 - ffmpeg version 6.0-full_build-www.gyan.dev
 
 ## Install
@@ -70,8 +70,8 @@ build.bat
 - ffmpeg version 4.4.2-0ubuntu0.22.04.1
 ### Windows
 - Windows 10 x86_64
-- gcc version 12.2.0 (x86_64-posix-seh-rev2, Built by MinGW-W64 project)
-- cmake version 3.26.1
+- gcc version 13.1.0 (x86_64-posix-seh-rev1, Built by MinGW-Builds project)
+- cmake version 3.26.4
 - ffmpeg version 6.0-full_build-www.gyan.dev
 ## 安装
 ### Linux (WSL)
