@@ -43,6 +43,10 @@ scoop install mingw
 scoop install ffmpeg
 build.bat
 ```
+
+## Experiment Result
+You can find our experiment result at [jbox](https://jbox.sjtu.edu.cn/l/w1pxlG).
+
 ---
 此仓库为CS3327的大作业，主要任务有:
 1. 实现`src/denoiser.cpp`中的`Filter`函数，完成单帧降噪。
@@ -87,3 +91,6 @@ scoop install mingw
 scoop install ffmpeg
 build.bat
 ```
+
+## 实验结果
+您可以从[jbox](https://jbox.sjtu.edu.cn/l/w1pxlG)获取我们的实验结果。
